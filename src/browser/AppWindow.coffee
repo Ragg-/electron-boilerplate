@@ -19,9 +19,9 @@ module.exports = class AppWindow extends Emitter
 
         # Developer mode
         if @_opts.devMode
-            @_electronConnect = require('electron-connect').client.create(w)
+            try @_electronConnect = require('electron-connect').client.create(w)
             w.openDevTools {detach: true}
-            w.webContents.executeJavaScript "require('electron-connect').client.create()"
+            w.webContents.executeJavaScript "try{require('electron-connect').client.create();}catch(e){}"
 
         return
 
