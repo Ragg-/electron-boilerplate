@@ -23,7 +23,6 @@ module.exports = class Application
         @_options       = options
         @packageJson    = require("../package.json")
 
-        # @createWindow(options)
         new AppWindow assign {}, options,
             url     : "file://#{__dirname}/../renderer/index.html"
 
@@ -41,40 +40,3 @@ module.exports = class Application
         ipc.on "open", (e, options) ->
             options ?= @_opts
             new AppWindow(options)
-
-
-# {EventEmitter}      = require "events"
-#
-# module.exports = class AppWindow extends BrowserWindow
-#     _opts           : null
-#
-#     constructor     : (options = {}) ->
-#         global.app = @
-#
-#         @_opts = options
-#
-#
-#         new AppWindow(options)
-#
-#     addWindow       : (options = {}) ->
-#         appWindow = new AppWindow
-#             width   : 800
-#             height  : 1000
-#             url     : "file://#{__dirname}/../renderer/index.html"
-#
-#
-#         appWindow.on "closed", =>
-#             index = @_windows.indexOf appWindow
-#             @_windows.splice index, 1
-#             appWindow = null
-#
-#         menu = new AppMenu(pkg: @packageJson)
-#         menu.attachToWindow appWindow
-#
-#         appWindow.on "closed", =>
-#             @removeWindow appWindow
-#
-
-#
-#         @_windows.push appWindow
-#         return
