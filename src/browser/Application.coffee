@@ -6,10 +6,6 @@ ipc             = require "ipc"
 EventEmitter    = require "eventemitter3"
 {Disposable}    = require "event-kit"
 
-assign          = (dest, objects...) ->
-    for o in objects
-        dest[k] = v for k, v of o
-    dest
 module.exports = class Application extends EventEmitter
 
     windows         : null
@@ -24,8 +20,6 @@ module.exports = class Application extends EventEmitter
         @options        = options
         @packageJson    = require "../package.json"
 
-        new AppWindow assign {}, options,
-            url     : "file://#{__dirname}/../renderer/index.html"
 
         @handleEvents()
 

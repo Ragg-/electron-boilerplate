@@ -3,11 +3,17 @@ path            = require "path"
 
 app             = require "app"
 Application     = require "./Application"
+AppWindow       = require "./AppWindow"
 
 process.on "uncaughtException", (error = {}) ->
     process.stderr.write("[Error]#{error.message}\n") if error.message?
     process.stderr.write("[Stack]#{error.stack}\n") if error.stack?
     return
+
+assign          = (dest, objects...) ->
+    for o in objects
+        dest[k] = v for k, v of o
+    dest
 
 parseCommandLine = ->
     version = app.getVersion()
@@ -47,5 +53,8 @@ do ->
 
     app.on "ready", ->
         global.app = new Application(args)
+
+        new AppWindow assign {}, args,
+            url     : "file://#{__dirname}/../renderer/index.html"
 
     return
