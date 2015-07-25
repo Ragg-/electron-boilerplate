@@ -10,6 +10,7 @@ module.exports = class Application extends EventEmitter
 
     windows         : null
     lastFocusedWindow   : null
+    command         : null
     options         : null
     packageJson     : null
 
@@ -19,6 +20,7 @@ module.exports = class Application extends EventEmitter
         @windows        = []
         @options        = options
         @packageJson    = require "../package.json"
+        @command        = require "./CommandManager"
 
 
         @handleEvents()
