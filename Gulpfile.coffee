@@ -203,7 +203,7 @@ g.task "electron-dev", do ->
     rendererDir = path.join(gulpOption.buildDir, "renderer/")
 
     restart = throttle 2000, -> electron.restart "--dev"
-    reload = throttle 2000, -> electron.reload
+    reload = throttle 2000, -> electron.reload()
 
     return ->
         electron.start("--dev")
