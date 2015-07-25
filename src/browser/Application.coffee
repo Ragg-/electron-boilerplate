@@ -9,18 +9,15 @@ assign          = (dest, objects...) ->
         dest[k] = v for k, v of o
     dest
 
-
-module.exports = class Application
-    _windows        : null
-    _options        : null
-    _navbar         : null
+    windows         : null
+    options         : null
     packageJson     : null
 
     constructor     : (options = {}) ->
 
-        @_windows       = []
-        @_options       = options
-        @packageJson    = require("../package.json")
+        @windows        = []
+        @options        = options
+        @packageJson    = require "../package.json"
 
         new AppWindow assign {}, options,
             url     : "file://#{__dirname}/../renderer/index.html"
@@ -28,11 +25,11 @@ module.exports = class Application
         @handleEvents()
 
     addWindow       : (window) ->
-        @_windows.push window
+        @windows.push window
         return
 
     removeWindow    : (window) ->
-        @_windows.splice index, 1 for index, w of @_windows when w is window
+        @windows.splice index, 1 for index, w of @windows when w is window
         return
 
     handleEvents    : ->
