@@ -3,17 +3,21 @@ AppWindow       = require "./AppWindow"
 
 fs              = require "fs"
 ipc             = require "ipc"
+EventEmitter    = require "eventemitter3"
+{Disposable}    = require "event-kit"
 
 assign          = (dest, objects...) ->
     for o in objects
         dest[k] = v for k, v of o
     dest
+module.exports = class Application extends EventEmitter
 
     windows         : null
     options         : null
     packageJson     : null
 
     constructor     : (options = {}) ->
+        super()
 
         @windows        = []
         @options        = options

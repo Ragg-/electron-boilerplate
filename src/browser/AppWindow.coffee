@@ -1,7 +1,7 @@
 BrowserWindow       = require "browser-window"
-{Emitter}           = require "event-kit"
+EventEmitter        = require "eventemitter3"
 
-module.exports = class AppWindow extends Emitter
+module.exports = class AppWindow extends EventEmitter
     options         : null
     browserWindow   : null
 
@@ -39,4 +39,3 @@ module.exports = class AppWindow extends Emitter
     dispose         : ->
         @browserWindow = null
         global.app.removeWindow(@)
-        super
