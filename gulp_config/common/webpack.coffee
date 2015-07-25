@@ -10,6 +10,9 @@ module.exports =
         publicPath          : "/js/"
 
     devtool     : "#source-map"
+
+    target      : "atom"
+
     resolve     :
         root            : [
             "#{option.sourceDir}/renderer/coffee"
