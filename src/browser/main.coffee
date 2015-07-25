@@ -46,7 +46,6 @@ do ->
         return
 
     app.on "ready", ->
-        global.application = new Application(args)
-        return
+        global.app = new Application(args)
 
     return

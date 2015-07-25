@@ -17,7 +17,6 @@ module.exports = class Application
     packageJson     : null
 
     constructor     : (options = {}) ->
-        global.app = @
 
         @_windows       = []
         @_options       = options
