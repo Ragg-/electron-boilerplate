@@ -13,6 +13,7 @@ assign          = (dest, objects...) ->
 module.exports = class Application extends EventEmitter
 
     windows         : null
+    lastFocusedWindow   : null
     options         : null
     packageJson     : null
 
@@ -33,11 +34,23 @@ module.exports = class Application extends EventEmitter
             options ?= @options
             new AppWindow(options)
 
+    ###
+    Window Managements
+    ###
+
     addWindow       : (window) ->
         @windows.push window
         return
 
     removeWindow    : (window) ->
         @windows.splice index, 1 for index, w of @windows when w is window
+        return
+
+    setLastFocusedWindow    : (window) ->
+        AppWindow.lastFocusedWindow = window
+        return
+
+    getLastFocusedWindow    : ->
+        AppWindow.lastFocusedWindow
         return
 
