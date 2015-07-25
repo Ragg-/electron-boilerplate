@@ -34,23 +34,49 @@ module.exports = class Application extends EventEmitter
             options ?= @options
             new AppWindow(options)
 
+        @command.on "app:open", (e, options) ->
+            new AppWindow(options)
+            return
+
+        return
+
     ###
     Window Managements
     ###
 
     addWindow       : (window) ->
         @windows.push window
+        @emit "did-window-added", window
         return
 
     removeWindow    : (window) ->
         @windows.splice index, 1 for index, w of @windows when w is window
+        @emit "did-window-remove"
         return
 
     setLastFocusedWindow    : (window) ->
         AppWindow.lastFocusedWindow = window
+        @emit "did-focused-window-changed", window
         return
 
     getLastFocusedWindow    : ->
         AppWindow.lastFocusedWindow
         return
 
+
+    ###
+    Event handler register
+    ###
+
+    on              : (event, listener) ->
+        super
+        new Disposable => @off event, listener
+
+    onDidWindowAdded    : (fn) ->
+        @on "did-window-added", fn
+
+    onDidWindowRemove   : (fn) ->
+        @on "did-window-remove", fn
+
+    onDidFocusedWindowChanged   : (fn) ->
+        @on "did-focused-window-changed", fn
