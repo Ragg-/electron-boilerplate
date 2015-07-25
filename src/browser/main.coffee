@@ -6,8 +6,8 @@ Application     = require "./Application"
 AppWindow       = require "./AppWindow"
 
 process.on "uncaughtException", (error = {}) ->
-    process.stderr.write("[Error]#{error.message}\n") if error.message?
-    process.stderr.write("[Stack]#{error.stack}\n") if error.stack?
+    process.stderr.write("\u001b[1;31m[Error]\u001b[0;31m#{error.message}\n\u001b[m\n") if error.message?
+    process.stderr.write("\u001b[1;31m[Stack]\u001b[0;31m#{error.stack}\u001b[m\n") if error.stack?
     return
 
 assign          = (dest, objects...) ->
