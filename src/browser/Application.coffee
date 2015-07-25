@@ -7,6 +7,7 @@ EventEmitter    = require "eventemitter3"
 {Disposable}    = require "event-kit"
 
 module.exports = class Application extends EventEmitter
+    @instance       : null
 
     windows         : null
     lastFocusedWindow   : null
@@ -22,6 +23,8 @@ module.exports = class Application extends EventEmitter
         @packageJson    = require "../package.json"
         @command        = require "./CommandManager"
 
+        Object.defineProperty Application, "instance",
+            value   : @
 
         @handleEvents()
 
