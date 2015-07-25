@@ -12,6 +12,7 @@ module.exports = class AppWindow extends Emitter
         global.app.addWindow(@)
 
         @setupWindow()
+        @handleEvents()
 
     setupWindow     : ->
         @browserWindow = w = new BrowserWindow(@_opts)
@@ -23,7 +24,9 @@ module.exports = class AppWindow extends Emitter
         return
 
     handleEvents    : ->
-        console.log @browserWindow.on "closed", @dispose.bind(@)
+        @browserWindow.on "closed", @dispose.bind(@)
+        @browserWindow.on "focus", =>
+            global.app.setLastFocusedWindow @
 
         if @_opts.devMode
             @browserWindow.webContents.on "did-start-loading", =>
