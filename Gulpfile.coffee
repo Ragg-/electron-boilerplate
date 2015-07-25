@@ -61,7 +61,7 @@ g.task "webpack", (cb) ->
         .pipe $.plumber()
         .pipe $.changed("#{gulpOption.buildDir}/js/")
         .pipe $.webpack(envRequireConfig("webpack.coffee"))
-        .pipe g.dest("#{gulpOption.buildDir}/js/")
+        .pipe g.dest("#{gulpOption.buildDir}/renderer/js/")
 
 #
 # JavaScript copy Task
@@ -70,7 +70,7 @@ g.task "vendor_js", ->
     g.src genPaths("vendor_js", ".js")
         .pipe $.plumber()
         .pipe $.changed("#{gulpOption.buildDir}/#{gulpOption.js.vendorJsDir}/")
-        .pipe g.dest("#{gulpOption.buildDir}/#{gulpOption.js.vendorJsDir}/")
+        .pipe g.dest("#{gulpOption.buildDir}/renderer/#{gulpOption.js.vendorJsDir}/")
 
 #
 # Stylus Task
@@ -80,7 +80,7 @@ g.task "stylus", ->
         .pipe $.plumber()
         .pipe $.changed("#{gulpOption.buildDir}/css/")
         .pipe $.stylus(envRequireConfig("stylus.coffee"))
-        .pipe g.dest("#{gulpOption.buildDir}/css/")
+        .pipe g.dest("#{gulpOption.buildDir}/renderer/css/")
 
 #
 # Jade Task
@@ -91,7 +91,7 @@ g.task "jade", ->
         .pipe $.changed("#{gulpOption.buildDir}/")
         .pipe $.jade()
         .pipe $.prettify()
-        .pipe g.dest("#{gulpOption.buildDir}/")
+        .pipe g.dest("#{gulpOption.buildDir}/renderer/")
 
 #
 # Image minify Task
@@ -101,7 +101,7 @@ g.task "images", ->
         .pipe $.plumber()
         .pipe $.changed("#{gulpOption.buildDir}/img/")
         .pipe $.imagemin(envRequireConfig("imagemin.coffee"))
-        .pipe g.dest("#{gulpOption.buildDir}/img/")
+        .pipe g.dest("#{gulpOption.buildDir}/renderer/img/")
 
 #
 # package.json copy Task
