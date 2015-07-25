@@ -28,6 +28,11 @@ module.exports = class Application extends EventEmitter
 
         @handleEvents()
 
+    handleEvents    : ->
+        ipc.on "open", (e, options) ->
+            options ?= @options
+            new AppWindow(options)
+
     addWindow       : (window) ->
         @windows.push window
         return
@@ -36,7 +41,3 @@ module.exports = class Application extends EventEmitter
         @windows.splice index, 1 for index, w of @windows when w is window
         return
 
-    handleEvents    : ->
-        ipc.on "open", (e, options) ->
-            options ?= @_opts
-            new AppWindow(options)
