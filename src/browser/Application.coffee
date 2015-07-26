@@ -54,13 +54,12 @@ module.exports = class Application extends EventEmitter
         return
 
     setLastFocusedWindow    : (window) ->
-        AppWindow.lastFocusedWindow = window
+        @lastFocusedWindow = window
         @emit "did-focused-window-changed", window
         return
 
     getLastFocusedWindow    : ->
-        AppWindow.lastFocusedWindow
-        return
+        @lastFocusedWindow
 
 
     ###
