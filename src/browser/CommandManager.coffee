@@ -32,7 +32,7 @@ class CommandManager extends EventEmitter
         return
 
     sendToWindow    : (window, command, args...) ->
-        return unless window?
+        return unless window?.browserWindow?.webContents?
 
         window.browserWindow.webContents.send "command", command, args...
         @emitter.emit "did-send", window, command, args...
