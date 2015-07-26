@@ -22,9 +22,6 @@ module.exports = class AppWindow extends EventEmitter
         @browserWindow = w = new BrowserWindow(@options)
         w.loadUrl(@options.url) if @options.url?
 
-        if @options.devMode
-            w.openDevTools {detach: true}
-
         return
 
     handleEvents    : ->

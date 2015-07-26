@@ -1,10 +1,16 @@
-AppMenu         = require "./AppMenu"
 AppWindow       = require "./AppWindow"
+MenuManager     = require "./MenuManager"
 
+app             = require "app"
 fs              = require "fs"
 ipc             = require "ipc"
 EventEmitter    = require "eventemitter3"
 {Disposable}    = require "event-kit"
+
+assign          = (dest, objects...) ->
+    for o in objects
+        dest[k] = v for k, v of o
+    dest
 
 module.exports = class Application extends EventEmitter
     @instance       : null
@@ -12,6 +18,7 @@ module.exports = class Application extends EventEmitter
     windows         : null
     lastFocusedWindow   : null
     command         : null
+    menu            : null
     options         : null
     packageJson     : null
 
@@ -22,6 +29,7 @@ module.exports = class Application extends EventEmitter
         @options        = options
         @packageJson    = require "../package.json"
         @command        = require "./CommandManager"
+        @menu           = new MenuManager
 
         Object.defineProperty Application, "instance",
             value   : @
@@ -33,8 +41,54 @@ module.exports = class Application extends EventEmitter
             options ?= @options
             new AppWindow(options)
 
-        @command.on "app:open", (e, options) ->
-            new AppWindow(options)
+        # MenuManager events
+
+        @onDidWindowAdd (window) =>
+            @menu.attachMenu window
+
+        @onDidFocusedWindowChange (window) =>
+            @menu.changeActiveMenu window
+
+        @menu.onDidClickCommandItem (command) =>
+            @command.dispatch command
+
+        @handleAppCommands()
+        @handleWindowCommands()
+
+
+        return
+
+    handleAppCommands       : ->
+        @command.on "app:new-window", =>
+            new AppWindow assign {}, @options,
+                url     : "file://#{__dirname}/../renderer/index.html"
+            return
+
+        @command.on "app:quit", =>
+            app.quit()
+            return
+
+        return
+
+
+    handleWindowCommands    : ->
+        bindCommandToBwAction = (cmd, method) =>
+            @command.on cmd, =>
+                @getLastFocusedWindow()?.browserWindow[method]()
+                return
+
+        bindCommandToBwAction "window:toggle-dev-tools", "toggleDevTools"
+        bindCommandToBwAction "window:reload", "reload"
+
+        @command.on "window:close", =>
+            w = @getLastFocusedWindow()?.browserWindow
+            return unless w?
+
+            if w.devToolsWebContents?
+                w.closeDevTools()
+            else if w.isFocused()
+                w.close()
+
             return
 
         return
