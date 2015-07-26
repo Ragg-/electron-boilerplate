@@ -21,6 +21,11 @@ class CommandManager extends EventEmitter
     Sender & Receiver
     ###
 
+    dispatch        : (command, args...) ->
+        @emit command, args...
+        @send command, args...
+        return
+
     send            : (command, args...) ->
         window = global.app.getLastFocusedWindow()
         @sendToWindow window, command, args...
