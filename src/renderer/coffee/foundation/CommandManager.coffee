@@ -24,6 +24,10 @@ class CommandManager extends EventEmitter
     Sender & Receiver
     ###
 
+    dispatch        : (command, args...) ->
+        @emit command, args...
+        return
+
     send            : (command, args...) ->
         ipc.send "command", command, args...
         @emitter.emit "did-send", command, args...
