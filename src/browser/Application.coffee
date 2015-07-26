@@ -71,11 +71,11 @@ module.exports = class Application extends EventEmitter
         super
         new Disposable => @off event, listener
 
-    onDidWindowAdded    : (fn) ->
+    onDidWindowAdd      : (fn) ->
         @on "did-window-added", fn
 
     onDidWindowRemove   : (fn) ->
         @on "did-window-remove", fn
 
-    onDidFocusedWindowChanged   : (fn) ->
+    onDidFocusedWindowChange    : (fn) ->
         @on "did-focused-window-changed", fn
