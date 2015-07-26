@@ -11,6 +11,10 @@ module.exports = class AppWindow extends EventEmitter
         @options = options
         global.app.addWindow(@)
 
+        # Created window is focused.
+        # But not "focus" event is fired.
+        global.app.setLastFocusedWindow(@)
+
         @setupWindow()
         @handleEvents()
 
