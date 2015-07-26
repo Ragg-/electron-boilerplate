@@ -24,8 +24,35 @@ module.exports = class AppWindow extends EventEmitter
         return
 
     handleEvents    : ->
-        @browserWindow.on "closed", @dispose.bind(@)
-        @browserWindow.on "focus", =>
+        # delegate browserWindow events
+        # https://github.com/atom/electron/blob/02bdace366f38271b5c186412f42810ecb06e99e/docs/api/browser-window.md
+        [
+            "page-title-updated"
+            "close"
+            "closed"
+            "unresponsive"
+            "responsive"
+            "blur"
+            "focus"
+            "maximize"
+            "unmaximize"
+            "minimize"
+            "restore"
+            "resize"
+            "move"
+            "moved"
+            "enter-full-screen"
+            "leave-full-screen"
+            "enter-html-full-screen"
+            "leave-html-full-screen"
+            "devtools-opened"
+            "devtools-closed"
+            "devtools-focused"
+        ].forEach (name) =>
+            @browserWindow.on name, => @emit name, arguments...
+
+        @on "closed", @dispose.bind(@)
+        @on "focus", =>
             global.app.setLastFocusedWindow @
 
         if @options.devMode
