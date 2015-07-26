@@ -94,6 +94,13 @@ module.exports = class Application extends EventEmitter
         return
 
     ###
+    Application state
+    ###
+
+    isDevMode       : ->
+        !!@options.devMode
+
+    ###
     Window Managements
     ###
 
