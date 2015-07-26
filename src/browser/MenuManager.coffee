@@ -1,14 +1,3 @@
-# _           = require "lodash"
-# season      = require "season"
-#
-# Menu        = require "menu"
-#
-# module.exports = class AppMenu
-#     constructor         : ->
-#         @template = season.readFileSync season.resolve(__dirname, "./menubar/#{process.platform}.cson")
-#
-#         @menu = Menu.buildFromTemplate @template, _.cloneDeep @template.menu
-#         Menu.setApplicationMenu @menu
 Menu            = require "menu"
 path            = require "path"
 
