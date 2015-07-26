@@ -10,11 +10,6 @@ process.on "uncaughtException", (error = {}) ->
     process.stderr.write("\u001b[1;31m[Stack]\u001b[0;31m#{error.stack}\u001b[m\n") if error.stack?
     return
 
-assign          = (dest, objects...) ->
-    for o in objects
-        dest[k] = v for k, v of o
-    dest
-
 parseCommandLine = ->
     version = app.getVersion()
 
@@ -53,8 +48,6 @@ do ->
 
     app.on "ready", ->
         global.app = new Application(args)
-
-        new AppWindow assign {}, args,
-            url     : "file://#{__dirname}/../renderer/index.html"
+        global.app.command.dispatch "app:new-window"
 
     return
