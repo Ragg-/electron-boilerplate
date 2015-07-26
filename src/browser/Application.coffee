@@ -18,7 +18,7 @@ module.exports = class Application extends EventEmitter
     constructor     : (options = {}) ->
         super()
 
-        @windows        = []
+        @windows        = new Set
         @options        = options
         @packageJson    = require "../package.json"
         @command        = require "./CommandManager"
@@ -44,13 +44,14 @@ module.exports = class Application extends EventEmitter
     ###
 
     addWindow       : (window) ->
-        @windows.push window
-        @emit "did-window-added", window
+        preSize = @windows.size
+        if @windows.add(window).size isnt preSize
+            @emit "did-window-added", window
         return
 
     removeWindow    : (window) ->
-        @windows.splice index, 1 for index, w of @windows when w is window
-        @emit "did-window-remove"
+        if @windows.delete(window)
+            @emit "did-window-remove"
         return
 
     setLastFocusedWindow    : (window) ->
