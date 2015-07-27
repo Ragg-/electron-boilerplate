@@ -15,6 +15,15 @@ throttle = (interval, fn) ->
     fn()
     return
 
+once = (fn) ->
+    executed = false
+    return ->
+        return if executed
+
+        fn.apply null, arguments
+        executed = true
+        return
+
 envRequireConfig = (file) ->
     exports = {}
 
@@ -198,19 +207,24 @@ g.task "self-watch", ->
 # Electron startup task
 #
 g.task "electron-dev", do ->
-    electron = require('electron-connect').server.create
-        path    : gulpOption.buildDir
-
+    electron    = null
+    restart     = null
+    reload      = null
     rendererDir = path.join(gulpOption.buildDir, "renderer/")
 
-    restart = throttle 2000, -> electron.restart "--dev"
-    reload = throttle 2000, -> electron.reload()
+    setupElectron = once =>
+        electron = require('electron-connect').server.create
+            path    : gulpOption.buildDir
+        restart = throttle 2000, -> electron.restart "--dev"
+        reload = throttle 2000, -> electron.reload()
+        return
 
     return ->
-        electron.start("--dev")
+        setupElectron()
 
-        $.watch [gulpOption.buildDir, "!#{rendererDir}"], restart
-        $.watch rendererDir, reload
+        electron.start("--dev")
+        $.watch ["#{gulpOption.buildDir}**", "!#{rendererDir}**"], restart
+        $.watch ["#{rendererDir}**"], reload
 
 
 #
