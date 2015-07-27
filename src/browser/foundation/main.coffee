@@ -6,7 +6,7 @@ Application     = require "./Application"
 AppWindow       = require "./AppWindow"
 
 process.on "uncaughtException", (error = {}) ->
-    appRoot = new RegExp(path.join(__dirname, "../"), "g")
+    appRoot = new RegExp(path.join(__dirname, "../../"), "g")
     process.stderr.write("\u001b[1;31m[Error]\u001b[0;31m#{error.message}\n\u001b[m\n") if error.message?
     process.stderr.write("\u001b[1;31m[Stack]\u001b[0;31m#{error.stack.replace(appRoot, "")}\u001b[m\n") if error.stack?
     return

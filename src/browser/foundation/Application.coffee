@@ -27,7 +27,7 @@ module.exports = class Application extends EventEmitter
 
         @windows        = new Set
         @options        = options
-        @packageJson    = require "../package.json"
+        @packageJson    = require "../../package.json"
         @command        = require "./CommandManager"
         @menu           = new MenuManager
 
@@ -61,7 +61,7 @@ module.exports = class Application extends EventEmitter
     handleAppCommands       : ->
         @command.on "app:new-window", =>
             new AppWindow assign {}, @options,
-                url     : "file://#{__dirname}/../renderer/index.html"
+                url     : "file://#{__dirname}/../../renderer/index.html"
             return
 
         @command.on "app:quit", =>
