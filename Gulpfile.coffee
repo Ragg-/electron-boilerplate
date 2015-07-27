@@ -210,6 +210,7 @@ g.task "electron-dev", do ->
     electron    = null
     restart     = null
     reload      = null
+    deferTime   = if fs.existsSync("#{gulpOption.buildDir}/package.json") then 1000 else 8000
     rendererDir = path.join(gulpOption.buildDir, "renderer/")
 
     setupElectron = once =>
@@ -219,12 +220,17 @@ g.task "electron-dev", do ->
         reload = throttle 2000, -> electron.reload()
         return
 
-    return ->
+    return (cb) ->
         setupElectron()
 
-        electron.start("--dev")
-        $.watch ["#{gulpOption.buildDir}**", "!#{rendererDir}**"], restart
-        $.watch ["#{rendererDir}**"], reload
+        console.info "%s[task:electron-dev]%s Wait #{deferTime / 1000}sec for build-task complete%s", "\u001b[1;36m", "\u001b[0;36m", "\u001b[m"
+
+        setTimeout ->
+            electron.start("--dev")
+            $.watch ["#{gulpOption.buildDir}**", "!#{rendererDir}**"], restart
+            $.watch ["#{rendererDir}**"], reload
+            cb()
+        , deferTime
 
 
 #
