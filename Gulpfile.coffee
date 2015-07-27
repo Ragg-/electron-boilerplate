@@ -51,6 +51,7 @@ g.task "copy-browser-files", ->
         "src/**"
         "!src/renderer/**"
     ]
+        .pipe $.changed(gulpOption.buildDir)
         .pipe g.dest(gulpOption.buildDir)
 
 #
@@ -59,7 +60,7 @@ g.task "copy-browser-files", ->
 g.task "webpack", (cb) ->
     g.src genPaths("coffee", ".coffee").concat(genPaths("js", ".js"))
         .pipe $.plumber()
-        .pipe $.changed("#{gulpOption.buildDir}/js/")
+        .pipe $.changed("#{gulpOption.buildDir}/renderer/js/")
         .pipe $.webpack(envRequireConfig("webpack.coffee"))
         .pipe g.dest("#{gulpOption.buildDir}/renderer/js/")
 
@@ -69,7 +70,7 @@ g.task "webpack", (cb) ->
 g.task "vendor_js", ->
     g.src genPaths("vendor_js", ".js")
         .pipe $.plumber()
-        .pipe $.changed("#{gulpOption.buildDir}/#{gulpOption.js.vendorJsDir}/")
+        .pipe $.changed("#{gulpOption.buildDir}/renderer/#{gulpOption.js.vendorJsDir}/")
         .pipe g.dest("#{gulpOption.buildDir}/renderer/#{gulpOption.js.vendorJsDir}/")
 
 #
@@ -78,7 +79,7 @@ g.task "vendor_js", ->
 g.task "stylus", ->
     g.src genPaths("styl", ".styl")
         .pipe $.plumber()
-        .pipe $.changed("#{gulpOption.buildDir}/css/")
+        .pipe $.changed("#{gulpOption.buildDir}/renderer/css/")
         .pipe $.stylus(envRequireConfig("stylus.coffee"))
         .pipe g.dest("#{gulpOption.buildDir}/renderer/css/")
 
@@ -88,7 +89,7 @@ g.task "stylus", ->
 g.task "jade", ->
     g.src genPaths("", "jade", ["!#{gulpOption.sourceDir}/coffee/**/*.jade"])
         .pipe $.plumber()
-        .pipe $.changed("#{gulpOption.buildDir}/")
+        .pipe $.changed("#{gulpOption.buildDir}/renderer/")
         .pipe $.jade()
         .pipe $.prettify()
         .pipe g.dest("#{gulpOption.buildDir}/renderer/")
@@ -99,7 +100,7 @@ g.task "jade", ->
 g.task "images", ->
     g.src genPaths("img", "{png,jpg,jpeg,gif}")
         .pipe $.plumber()
-        .pipe $.changed("#{gulpOption.buildDir}/img/")
+        .pipe $.changed("#{gulpOption.buildDir}/renderer/img/")
         .pipe $.imagemin(envRequireConfig("imagemin.coffee"))
         .pipe g.dest("#{gulpOption.buildDir}/renderer/img/")
 
