@@ -117,15 +117,19 @@ g.task "images", ->
 # package.json copy Task
 #
 g.task "package-json", (cb) ->
-    string = fs.readFileSync "./package.json", {encoding: "utf8"}
-    json = JSON.parse(string)
+    try
+        string = fs.readFileSync "./package.json", {encoding: "utf8"}
+        json = JSON.parse(string)
 
-    delete json.devDependencies
-    newString = JSON.stringify json, null, "  "
+        delete json.devDependencies
+        newString = JSON.stringify json, null, "  "
 
-    fs.writeFileSync path.join(gulpOption.sourceDir, "package.json"), newString, {encoding: "utf8"}
-    fs.writeFileSync path.join(gulpOption.buildDir, "package.json"), newString, {encoding: "utf8"}
+        fs.mkdirSync(gulpOption.buildDir)
+        fs.writeFileSync path.join(gulpOption.sourceDir, "package.json"), newString, {encoding: "utf8"}
+        fs.writeFileSync path.join(gulpOption.buildDir, "package.json"), newString, {encoding: "utf8"}
+
     cb()
+    return
 
 #
 # File watch Task
