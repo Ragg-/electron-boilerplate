@@ -71,6 +71,6 @@ Application menu definitions in `src/browser/config/menus/{platform}.coffee`
 ### CSS Selector based context menu
 _(It's only used on Renderer process)_
 
-- app.contextMenu.add("<selector>", <electron's menu template object>)
+- app.contextMenu.add("&lt;selector&gt;", &lt;electron's menu template object&gt;)
 
 `TODO: Write this section`
