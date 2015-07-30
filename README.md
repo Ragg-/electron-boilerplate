@@ -53,9 +53,9 @@ Electron development environment and foundation feature kit.
 CommandManger explode to `global.app.command (on Browser)` or `window.app.command (on Renderer)`.
 
 CommandManger is extends EventEmitter3, if you want handling an command,
-call `app.command.on("&lt;command name&gt;", &lt;listener&gt;)` method!
+call `app.command.on("<command name>", <listener>)` method!
 
-If you want to dispatch the command, call `app.command.dispatch("&lt;command name&gt;"[, arguments...])`.
+If you want to dispatch the command, call `app.command.dispatch("<command name>"[, arguments...])`.
 
 `command.dispatch` is dispatch command to Browser and Renderer(not other Renderer process).
 
