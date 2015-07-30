@@ -28,7 +28,7 @@ module.exports = class MenuManager extends EventEmitter
     ###
 
     getDefaultTemplate  : ->
-        @defaultTemplate = require "./menus/#{process.platform}" unless @defaultTemplate?
+        @defaultTemplate = require "../config/menus/#{process.platform}" unless @defaultTemplate?
         @defaultTemplate
 
     buildFromTemplate   : (template) ->
