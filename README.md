@@ -1,12 +1,12 @@
 # Electron-boilerplate
-Electron development environment and foundation feature kit.
+Development environment and Foundation feature kit for Electron
 
 ## How to use
 1. This boilerplate uses `gulp`.
    Please install `node.js(or iojs)` and `gulp` before setup.
 
 2.  Next, clone this repo to your workspace.
-    And move cloned workspace.
+    And move to the cloned workspace.
     ``` shell
     git clone https://github.com/Ragg-/electron-boilerplate.git /path/to/cloning
     cd /path/to/cloning
@@ -22,7 +22,7 @@ Electron development environment and foundation feature kit.
    gulp package-json
    ```
 
-5. Change directory to `src/`, and install app's dependent npm modules
+5. Move to `src/`, and install app's dependent npm modules
    ``` shell
    cd src/
    npm i
@@ -39,6 +39,7 @@ Electron development environment and foundation feature kit.
     - `Webpack`
     - `Stylus`
     - `CoffeeScript`
+    - `Jade`
 
 
 - For debugging
@@ -50,26 +51,26 @@ Electron development environment and foundation feature kit.
 - app.command.dispatch("&lt;command name&gt;"[, arguments...])
 - app.command.on("&lt;command name&gt;"[, arguments...])
 
-`CommandManager(on Browser, Renderer)` provides Browser&lt;-&gt;Renderer transparent command dispatch.  
-CommandManger explode to `global.app.command (on Browser)` or `window.app.command (on Renderer)`.
+`CommandManager(on Browser, Renderer)` provides transparent access between Browser and Render.  
+CommandManger explodes to `global.app.command (on Browser)` or `window.app.command (on Renderer)`.
 
-CommandManger is extends EventEmitter3, if you want handling an command,
+CommandManger extends EventEmitter3. If you want to handle some commands,  
 call `app.command.on("<command name>", <listener>)` method!
 
 If you want to dispatch the command, call `app.command.dispatch("<command name>"[, arguments...])`.
 
-`command.dispatch` is dispatch command to Browser and Renderer(not other Renderer process).
+`command.dispatch` dispatches a command to Browser and Renderer (not to other Renderer processes)
 
 ### Application menu (with scriptable defintion)
 _(It's only used on Browser process)_
 
-Application menu definitions in `src/browser/config/menus/{platform}.coffee`  
+Application menu definitions are in `src/browser/config/menus/{platform}.coffee`  
 `TODO: Write this section`
 
-### Multiple window management
+### Multiple windows management
 `TODO: Write this section`
 
-### CSS Selector based context menu
+### CSS selector-based context menu
 _(It's only used on Renderer process)_
 
 - app.contextMenu.add("&lt;selector&gt;", &lt;electron's menu template object&gt;)
