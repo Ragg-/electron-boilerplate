@@ -17,17 +17,18 @@ Electron development environment and foundation feature kit.
     npm i
     ```
 
-4. Run gulp, for building codes, on `src/` to `build/`.
+4. Run gulp `package-json` task.
+   ``` shell
+   gulp package-json
+   ```
 
-5. Run `Hello, world Electron App`? Abort gulp.
-
-6. Change directory to `src/`, and install app's dependent npm modules
+5. Change directory to `src/`, and install app's dependent npm modules
    ``` shell
    cd src/
    npm i
    ```
 
-7. Move to workspace root, run gulp, start developing!
+6. Move to workspace root, run gulp, start developing!
    ``` shell
    cd ../
    gulp
