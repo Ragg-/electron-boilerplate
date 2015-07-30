@@ -15,6 +15,15 @@ throttle = (interval, fn) ->
     fn()
     return
 
+once = (fn) ->
+    executed = false
+    return ->
+        return if executed
+
+        fn.apply null, arguments
+        executed = true
+        return
+
 envRequireConfig = (file) ->
     exports = {}
 
@@ -51,6 +60,7 @@ g.task "copy-browser-files", ->
         "src/**"
         "!src/renderer/**"
     ]
+        .pipe $.changed(gulpOption.buildDir)
         .pipe g.dest(gulpOption.buildDir)
 
 #
@@ -59,9 +69,9 @@ g.task "copy-browser-files", ->
 g.task "webpack", (cb) ->
     g.src genPaths("coffee", ".coffee").concat(genPaths("js", ".js"))
         .pipe $.plumber()
-        .pipe $.changed("#{gulpOption.buildDir}/js/")
+        .pipe $.changed("#{gulpOption.buildDir}/renderer/js/")
         .pipe $.webpack(envRequireConfig("webpack.coffee"))
-        .pipe g.dest("#{gulpOption.buildDir}/js/")
+        .pipe g.dest("#{gulpOption.buildDir}/renderer/js/")
 
 #
 # JavaScript copy Task
@@ -69,8 +79,8 @@ g.task "webpack", (cb) ->
 g.task "vendor_js", ->
     g.src genPaths("vendor_js", ".js")
         .pipe $.plumber()
-        .pipe $.changed("#{gulpOption.buildDir}/#{gulpOption.js.vendorJsDir}/")
-        .pipe g.dest("#{gulpOption.buildDir}/#{gulpOption.js.vendorJsDir}/")
+        .pipe $.changed("#{gulpOption.buildDir}/renderer/#{gulpOption.js.vendorJsDir}/")
+        .pipe g.dest("#{gulpOption.buildDir}/renderer/#{gulpOption.js.vendorJsDir}/")
 
 #
 # Stylus Task
@@ -78,9 +88,9 @@ g.task "vendor_js", ->
 g.task "stylus", ->
     g.src genPaths("styl", ".styl")
         .pipe $.plumber()
-        .pipe $.changed("#{gulpOption.buildDir}/css/")
+        .pipe $.changed("#{gulpOption.buildDir}/renderer/css/")
         .pipe $.stylus(envRequireConfig("stylus.coffee"))
-        .pipe g.dest("#{gulpOption.buildDir}/css/")
+        .pipe g.dest("#{gulpOption.buildDir}/renderer/css/")
 
 #
 # Jade Task
@@ -88,10 +98,10 @@ g.task "stylus", ->
 g.task "jade", ->
     g.src genPaths("", "jade", ["!#{gulpOption.sourceDir}/coffee/**/*.jade"])
         .pipe $.plumber()
-        .pipe $.changed("#{gulpOption.buildDir}/")
+        .pipe $.changed("#{gulpOption.buildDir}/renderer/")
         .pipe $.jade()
         .pipe $.prettify()
-        .pipe g.dest("#{gulpOption.buildDir}/")
+        .pipe g.dest("#{gulpOption.buildDir}/renderer/")
 
 #
 # Image minify Task
@@ -99,23 +109,27 @@ g.task "jade", ->
 g.task "images", ->
     g.src genPaths("img", "{png,jpg,jpeg,gif}")
         .pipe $.plumber()
-        .pipe $.changed("#{gulpOption.buildDir}/img/")
+        .pipe $.changed("#{gulpOption.buildDir}/renderer/img/")
         .pipe $.imagemin(envRequireConfig("imagemin.coffee"))
-        .pipe g.dest("#{gulpOption.buildDir}/img/")
+        .pipe g.dest("#{gulpOption.buildDir}/renderer/img/")
 
 #
 # package.json copy Task
 #
 g.task "package-json", (cb) ->
-    string = fs.readFileSync "./package.json", {encoding: "utf8"}
-    json = JSON.parse(string)
+    try
+        string = fs.readFileSync "./package.json", {encoding: "utf8"}
+        json = JSON.parse(string)
 
-    delete json.devDependencies
-    newString = JSON.stringify json, null, "  "
+        delete json.devDependencies
+        newString = JSON.stringify json, null, "  "
 
-    fs.writeFileSync path.join(gulpOption.sourceDir, "package.json"), newString, {encoding: "utf8"}
-    fs.writeFileSync path.join(gulpOption.buildDir, "package.json"), newString, {encoding: "utf8"}
+        fs.mkdirSync(gulpOption.buildDir)
+        fs.writeFileSync path.join(gulpOption.sourceDir, "package.json"), newString, {encoding: "utf8"}
+        fs.writeFileSync path.join(gulpOption.buildDir, "package.json"), newString, {encoding: "utf8"}
+
     cb()
+    return
 
 #
 # File watch Task
@@ -197,19 +211,30 @@ g.task "self-watch", ->
 # Electron startup task
 #
 g.task "electron-dev", do ->
-    electron = require('electron-connect').server.create
-        path    : gulpOption.buildDir
-
+    electron    = null
+    restart     = null
+    reload      = null
+    deferTime   = if fs.existsSync("#{gulpOption.buildDir}/package.json") then 1000 else 8000
     rendererDir = path.join(gulpOption.buildDir, "renderer/")
 
-    restart = throttle 2000, -> electron.restart "--dev"
-    reload = throttle 2000, -> electron.reload
+    setupElectron = once =>
+        electron = require('electron-connect').server.create
+            path    : gulpOption.buildDir
+        restart = throttle 2000, -> electron.restart "--dev"
+        reload = throttle 2000, -> electron.reload()
+        return
 
-    return ->
-        electron.start("--dev")
+    return (cb) ->
+        setupElectron()
 
-        $.watch [gulpOption.buildDir, "!#{rendererDir}"], restart
-        $.watch rendererDir, reload
+        console.info "%s[task:electron-dev]%s Wait #{deferTime / 1000}sec for build-task complete%s", "\u001b[1;36m", "\u001b[0;36m", "\u001b[m"
+
+        setTimeout ->
+            electron.start("--dev")
+            $.watch ["#{gulpOption.buildDir}**", "!#{rendererDir}**"], restart
+            $.watch ["#{rendererDir}**"], reload
+            cb()
+        , deferTime
 
 
 #
