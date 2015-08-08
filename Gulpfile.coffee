@@ -214,14 +214,18 @@ g.task "electron-dev", do ->
     electron    = null
     restart     = null
     reload      = null
+
+    options     = envRequireConfig("electron_connect.coffee")
     deferTime   = if fs.existsSync("#{gulpOption.buildDir}/package.json") then 1000 else 8000
     rendererDir = path.join(gulpOption.buildDir, "renderer/")
 
     setupElectron = once =>
         electron = require('electron-connect').server.create
             path    : gulpOption.buildDir
-        restart = throttle 2000, -> electron.restart "--dev"
-        reload = throttle 2000, -> electron.reload()
+
+        restart = throttle options.browser.reloadThrottleMs, -> electron.restart "--dev"
+        reload = throttle options.renderer.reloadThrottleMs, -> electron.reload()
+
         return
 
     return (cb) ->
@@ -231,8 +235,13 @@ g.task "electron-dev", do ->
 
         setTimeout ->
             electron.start("--dev")
-            $.watch ["#{gulpOption.buildDir}**", "!#{rendererDir}**"], restart
-            $.watch ["#{rendererDir}**"], reload
+
+            if options.browser.watch
+                $.watch ["#{gulpOption.buildDir}**", "!#{rendererDir}**"], restart
+
+            if options.renderer.watch
+                $.watch ["#{rendererDir}**"], reload
+
             cb()
         , deferTime
 
