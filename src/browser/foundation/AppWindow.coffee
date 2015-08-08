@@ -56,8 +56,8 @@ module.exports = class AppWindow extends EventEmitter
         @on "focus", =>
             global.app.setLastFocusedWindow @
 
-        if @options.devMode
-            @browserWindow.webContents.on "did-start-loading", =>
+        if global.app.isDevMode()
+            @browserWindow.webContents.on "dom-ready", =>
                 try @_electronConnect = require('electron-connect').client.create(@browserWindow)
                 @browserWindow.webContents.executeJavaScript "try{require('electron-connect').client.create();}catch(e){}"
 
