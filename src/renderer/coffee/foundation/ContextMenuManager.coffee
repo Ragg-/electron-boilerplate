@@ -7,10 +7,12 @@ EventEmitter    = require "eventemitter3"
 
 module.exports = class ContextMenuManager extends EventEmitter
     lastPoppedItem : null
+    lastPoppedElement : null
     selectorMenuMap : null
 
     constructor : ->
         @lastPoppedItem = null
+        @lastPoppedElement = null
         @selectorMenuMap = {}
 
     ###
@@ -98,6 +100,7 @@ module.exports = class ContextMenuManager extends EventEmitter
     showForElement : (el) ->
         menu = Menu.buildFromTemplate(@templateForElement(el))
         menu.popup(Remote.getCurrentWindow())
+        @lastPoppedElement = el
         return
 
     showForElementPath : (path) ->
@@ -113,6 +116,7 @@ module.exports = class ContextMenuManager extends EventEmitter
 
         menu = Menu.buildFromTemplate(menuItems)
         @lastPoppedItem = menu
+        @lastPoppedElement = el[0]
         menu.popup(Remote.getCurrentWindow())
         return
 
