@@ -7,10 +7,12 @@ EventEmitter    = require "eventemitter3"
 
 module.exports = class ContextMenuManager extends EventEmitter
     lastPoppedItem : null
+    lastPoppedElement : null
     selectorMenuMap : null
 
     constructor : ->
         @lastPoppedItem = null
+        @lastPoppedElement = null
         @selectorMenuMap = {}
 
     ###
@@ -48,26 +50,26 @@ module.exports = class ContextMenuManager extends EventEmitter
     getActiveMenu : (active) ->
         @lastPoppedItem
 
-    wrapClick : (item) ->
+    wrapClick : (item, el) ->
         clickListener = item.click
 
         =>
             Menu.sendActionToFirstResponder?(item.selector) if item.selector?
 
             activeMenu = @getActiveMenu()
-            clickListener(item, activeMenu) if typeof clickListener is "function"
-            @emit("did-click-item", item, activeMenu)
-            @emit("did-click-command-item", item.command, item, activeMenu) if item.command?
+            clickListener.call(el, item, activeMenu) if typeof clickListener is "function"
+            @emit("did-click-item", item, activeMenu, el)
+            @emit("did-click-command-item", item.command, el, item) if item.command?
             return
 
-    translateTemplate : (template) ->
+    translateTemplate : (template, el) ->
         items = _.cloneDeep(template)
 
         for item in items
             item.metadata ?= {}
 
-            item.click = @wrapClick(item)
-            item.submenu = @translateTemplate(item.submenu) if item.submenu
+            item.click = @wrapClick(item, el)
+            item.submenu = @translateTemplate(item.submenu, el) if item.submenu
 
         items
 
@@ -89,7 +91,7 @@ module.exports = class ContextMenuManager extends EventEmitter
             prevItem = presentMenus[i - 1]
             presentMenus.splice(i, 1) if prevItem? and prevItem.type is "separator" and item.type is "separator"
 
-        @translateTemplate(presentMenus)
+        @translateTemplate(presentMenus, el)
 
     ###
     Context menu display methods
@@ -98,6 +100,7 @@ module.exports = class ContextMenuManager extends EventEmitter
     showForElement : (el) ->
         menu = Menu.buildFromTemplate(@templateForElement(el))
         menu.popup(Remote.getCurrentWindow())
+        @lastPoppedElement = el
         return
 
     showForElementPath : (path) ->
@@ -113,6 +116,7 @@ module.exports = class ContextMenuManager extends EventEmitter
 
         menu = Menu.buildFromTemplate(menuItems)
         @lastPoppedItem = menu
+        @lastPoppedElement = el[0]
         menu.popup(Remote.getCurrentWindow())
         return
 
