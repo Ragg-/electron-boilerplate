@@ -116,7 +116,7 @@ module.exports = class ContextMenuManager extends EventEmitter
 
         menu = Menu.buildFromTemplate(menuItems)
         @lastPoppedItem = menu
-        @lastPoppedElement = el[0]
+        @lastPoppedElement = path[0]
         menu.popup(Remote.getCurrentWindow())
         return
 
