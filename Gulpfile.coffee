@@ -67,7 +67,7 @@ g.task "copy-browser-files", ->
 # Webpack Task
 #
 g.task "webpack", (cb) ->
-    g.src genPaths("coffee", ".coffee").concat(genPaths("js", ".js"))
+    g.src genPaths("scripts", "{coffee,js}")
         .pipe $.plumber()
         .pipe $.changed("#{gulpOption.buildDir}/renderer/js/")
         .pipe $.webpack(envRequireConfig("webpack.coffee"))
@@ -144,8 +144,7 @@ g.task "watch", ->
         g.start ["copy-browser-files"]
 
     $.watch [
-        "#{rendererSrcRoot}/coffee/**/*.{coffee,jade,cson}"
-        "#{rendererSrcRoot}/js/**/*.{js,jade,cson}"
+        "#{rendererSrcRoot}/scripts/**/*"
     ], ->
         g.start ["webpack"]
 
@@ -161,8 +160,7 @@ g.task "watch", ->
 
     $.watch [
         "#{rendererSrcRoot}/**/*.jade"
-        "!#{rendererSrcRoot}/coffee/**/*.jade"
-        "!#{rendererSrcRoot}/js/**/*.jade"
+        "!#{rendererSrcRoot}/scripts/**/*.jade"
     ], ->
         g.start ["jade"]
 

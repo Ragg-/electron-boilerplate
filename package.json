@@ -39,9 +39,7 @@
   },
   "dependencies": {
     "coffee-script": "^1.9.2",
-    "event-kit": "git://github.com/Ragg-/event-kit.git#in-webpack-built",
-    "eventemitter3": "^1.1.1",
-    "lodash": "^3.8.0",
+    "electron-kit": "0.0.1",
     "yargs": "^3.9.0"
   }
 }
