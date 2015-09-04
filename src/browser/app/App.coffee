@@ -1,15 +1,15 @@
+app = require "app"
+
 ElectronKit = require "electron-kit"
-{Application} = ElectronKit.Renderer
+{Application} = ElectronKit.Browser
 
 module.exports =
 class App extends Application
-    constructor : ->
-        super
-
-        # Write your codes here
-
     initializeModules : ->
         super
 
     handleEvents : ->
+        super
+
+    handleCommands : ->
         super

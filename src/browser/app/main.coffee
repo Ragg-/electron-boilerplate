@@ -2,8 +2,7 @@ fs              = require "fs"
 path            = require "path"
 
 app             = require "app"
-Application     = require "./Application"
-AppWindow       = require "./AppWindow"
+App     = require "./App"
 
 process.on "uncaughtException", (error = {}) ->
     appRoot = new RegExp(path.join(__dirname, "../../"), "g")
@@ -48,7 +47,7 @@ do ->
         return
 
     app.on "ready", ->
-        global.app = new Application(args)
+        global.app = new App(args)
         global.app.command.dispatch "app:new-window"
 
     return

@@ -1,1 +1,1 @@
-require "./foundation/main.coffee"
+require "./app/main.coffee"
