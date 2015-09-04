@@ -4,11 +4,12 @@ process.on "uncaughtException", (error = {}) ->
     process.stderr.write("\u001b[1;31m[Stack]\u001b[0;31m#{error.stack.replace(appRoot, "")}\u001b[m\n") if error.stack?
     return
 
-fs              = require "fs"
-path            = require "path"
+fs = require "fs"
+path = require "path"
 
-app             = require "app"
-App     = require "./App"
+app = require "app"
+
+App = require "./App"
 
 parseCommandLine = ->
     yargs = require("yargs")
