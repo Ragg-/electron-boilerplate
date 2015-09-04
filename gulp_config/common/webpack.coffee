@@ -15,8 +15,7 @@ module.exports =
 
     resolve     :
         root            : [
-            "#{option.sourceDir}/renderer/coffee"
-            "#{option.sourceDir}/renderer/js"
+            "#{option.sourceDir}/renderer/scripts"
         ]
         extensions      : ["", ".coffee", ".js"]
         modulesDirectories  : [
