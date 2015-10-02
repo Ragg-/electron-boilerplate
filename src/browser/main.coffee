@@ -8,8 +8,7 @@ fs = require "fs"
 path = require "path"
 
 app = require "app"
-
-App = require "./App"
+App = require "./app/App"
 
 parseCommandLine = ->
     yargs = require("yargs")
