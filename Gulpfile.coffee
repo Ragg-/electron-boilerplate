@@ -114,6 +114,15 @@ g.task "images", ->
         .pipe g.dest("#{gulpOption.buildDir}/renderer/img/")
 
 #
+# Image minify Task
+#
+g.task "assets", ->
+    g.src "#{sourceDir}/renderer/assets/"
+        .pipe $.plumber()
+        .pipe $.changed("#{gulpOption.buildDir}/renderer/assets/")
+        .pipe g.dest("#{gulpOption.buildDir}/renderer/assets/")
+
+#
 # package.json copy Task
 #
 g.task "package-json", (cb) ->
@@ -173,6 +182,11 @@ g.task "watch", ->
         "#{rendererSrcRoot}/img/**/*.{png,jpg,jpeg,gif}"
     ], ->
         g.start ["images"]
+
+    $.watch [
+        "#{rendererSrcRoot}/assets/"
+    ], ->
+        g.start ["assets"]
 
 
 g.task "packaging", (cb) ->
@@ -247,7 +261,7 @@ g.task "electron-dev", do ->
 #
 # Define default
 #
-g.task "build", ["webpack", "stylus", "jade", "images", "copy-browser-files", "package-json"]
+g.task "build", ["webpack", "stylus", "jade", "images", "copy-browser-files", "package-json", "assets"]
 g.task "publish", ["production"]
 g.task "dev", ["build", "watch"]
 g.task "default", ["self-watch", "electron-dev"]
